@@ -1,0 +1,9 @@
+[Unit]
+Description=Periodically check the wallpaper video for theme changes
+
+[Timer]
+OnBootSec=15s
+OnUnitActiveSec=30s
+
+[Install]
+WantedBy=timers.target

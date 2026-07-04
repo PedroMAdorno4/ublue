@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply chezmoi dotfiles on first login
+After=graphical-session.target
+ConditionPathExists=!%h/.config/chezmoi/chezmoi.toml
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/chezmoi init --apply --source=/usr/share/ublue-dotfiles --promptDefaults
+
+[Install]
+WantedBy=graphical-session.target

@@ -1,8 +1,7 @@
 [user]
 	name = Pedro Adorno
 	email = pedroadorno99@gmail.com
-[signing]
-	key = ~/.ssh/id_ed25519
+  signingkey = ~/.ssh/id_ed25519
 	signByDefault = true
 [gpg]
 	format = ssh

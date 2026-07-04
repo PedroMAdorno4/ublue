@@ -26,6 +26,7 @@ input {
 
 environment {
     ELECTRON_OZONE_PLATFORM_HINT "auto"
+    QT_QPA_PLATFORMTHEME "qt6ct"
 }
 
 // Disables middle click pasting
@@ -95,7 +96,10 @@ layout {
     }
 }
 
+include "./colors.kdl" optional=true
+
 spawn-at-startup "firefox"
+spawn-at-startup "noctalia"
 spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "NIRI_SOCKET" "XDG_DATA_DIRS"
 spawn-at-startup "pear-desktop"
 spawn-at-startup "systemctl" "--user" "start" "mpvpaper-dp3.service" "mpvpaper-dp2.service"

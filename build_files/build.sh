@@ -5,22 +5,30 @@ set -ouex pipefail
 # Copy system_files/ to /
 cp -avf "/ctx/system_files"/. /
 
+# Bake dotfiles/ into the image so chezmoi can apply them without network access
+mkdir -p /usr/share/ublue-dotfiles
+cp -avr "/ctx/dotfiles"/. /usr/share/ublue-dotfiles/
+
 ### Repos
 
 # RPMFusion (free + nonfree) is available by default on ublue images
 # COPR repos needed for some packages
 dnf5 -y copr enable atim/lazygit
-dnf5 -y copr enable atim/btop
-dnf5 -y copr enable atim/lazydocker
-dnf5 -y copr enable wef/lact
-dnf5 -y copr enable rodoma92/ydotool
 dnf5 -y copr enable lionheartp/Hyprland
+dnf5 -y copr enable solopasha/hyprland
 
 ### System packages
 
-dnf5 install -y \
+# Keep downloaded RPMs in the /var/cache cache mount across builds instead of
+# deleting them right after install (Fedora's default keepcache=0 would
+# otherwise defeat the --mount=type=cache,dst=/var/cache in the Containerfile,
+# forcing every rebuild to re-download every package from the network).
+dnf5 config-manager setopt keepcache=1
+
+dnf5 install -y --skip-unavailable \
     zsh \
     git \
+    chezmoi \
     vim \
     neovim \
     tmux \
@@ -44,7 +52,7 @@ dnf5 install -y \
     pwvucontrol \
     wl-clipboard \
     libnotify \
-    killall \
+    psmisc \
     util-linux \
     p7zip \
     p7zip-plugins \
@@ -148,28 +156,29 @@ dnf5 install -y \
     dnsmasq \
     podman \
     podman-compose \
+    samba \
     dive \
     podman-tui \
     sunshine \
     fcitx5 \
     fcitx5-gtk \
     fcitx5-mozc \
-    waybar \
     upower \
     polkit-gnome \
     noctalia-git \
     hyprshot \
     brightnessctl \
     wofi-emoji \
-    bibata-cursor-themes
+    bibata-cursor-themes \
+    util-linux-user \
+    qt5ct \
+    qt6ct \
+    breeze-icon-theme
 
 # Disable COPRs so they don't persist in the final image
 dnf5 -y copr disable atim/lazygit
-dnf5 -y copr disable atim/btop
-dnf5 -y copr disable atim/lazydocker
-dnf5 -y copr disable wef/lact
-dnf5 -y copr disable rodoma92/ydotool
 dnf5 -y copr disable lionheartp/Hyprland
+dnf5 -y copr disable solopasha/hyprland
 
 ### Fonts
 
@@ -177,11 +186,17 @@ dnf5 install -y \
     jetbrains-mono-fonts-all \
     google-noto-fonts-common \
     google-noto-emoji-color-fonts \
-    twemoji-color-fonts \
-    fontawesome-fonts \
-    'cascadia-*-nerd-font' \
-    'jetbrains-mono-*-nerd-font' \
-    'fira-code-*-nerd-font'
+    twitter-twemoji-fonts \
+    fontawesome-fonts-all \
+    cascadia-code-nf-fonts \
+    cascadia-mono-nf-fonts \
+    fira-code-fonts
+
+# JetBrains Mono Nerd Font (not in Fedora repos)
+mkdir -p /usr/share/fonts/JetBrainsMonoNerdFont
+curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz" \
+    | tar -xJ -C /usr/share/fonts/JetBrainsMonoNerdFont/
+fc-cache -f /usr/share/fonts/JetBrainsMonoNerdFont/
 
 ### Services
 
@@ -189,11 +204,9 @@ dnf5 install -y \
 systemctl enable earlyoom.service
 systemctl enable libvirtd.service || true
 systemctl enable bluetooth.service
-systemctl enable docker.service
-systemctl enable docker.socket
 systemctl enable tailscaled.service
-systemctl enable lactd.service
-systemctl enable flatpak-system-update.timer
+systemctl enable lactd.service || true
+systemctl enable flatpak-system-update.timer || true
 
 # Avahi for mDNS
 systemctl enable avahi-daemon.service
@@ -205,16 +218,31 @@ systemctl enable nmb.service
 # GNOME keyring
 systemctl enable --global gnome-keyring-secrets.service || true
 
+# chezmoi dotfiles apply on first login
+systemctl enable --global chezmoi-init.service || true
+
 ### oh-my-posh (not in Fedora repos, install from GitHub)
-OMP_VERSION="$(curl -s https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')"
-curl -fsSL "https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64" -o /usr/local/bin/oh-my-posh
-chmod +x /usr/local/bin/oh-my-posh
+curl -fsSL "https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64" -o /usr/bin/oh-my-posh
+chmod +x /usr/bin/oh-my-posh
 
 ### antidote (zsh plugin manager)
 git clone --depth=1 https://github.com/getantidote/antidote.git /usr/share/antidote
 
 ### wl-gammarelay-rs (Wayland gamma/temperature control, not in Fedora repos)
-cargo install wl-gammarelay-rs --root /usr/local
+CARGO_HOME=/tmp/cargo cargo install wl-gammarelay-rs --root /usr
+
+### matugen (Material-You palette generator, not in Fedora repos)
+# Release asset filenames embed the version, so the /latest/download/ shortcut
+# doesn't work here (unlike oh-my-posh above) -- resolve the tag via the API first.
+MATUGEN_TAG=$(curl -fsSL "https://api.github.com/repos/InioX/matugen/releases/latest" | jq -r .tag_name)
+MATUGEN_VERSION="${MATUGEN_TAG#v}"
+curl -fsSL "https://github.com/InioX/matugen/releases/download/${MATUGEN_TAG}/matugen-${MATUGEN_VERSION}-x86_64.tar.gz" \
+    | tar -xzf - -C /usr/bin/ matugen
+chmod +x /usr/bin/matugen
 
 ### Cleanup
-dnf5 clean all
+# Note: intentionally not running `dnf5 clean all` here. /var/cache is a
+# buildah cache mount (--mount=type=cache in the Containerfile), so its
+# contents are never part of the committed image layer regardless of whether
+# they're cleaned -- but wiping it here would defeat the point of the cache
+# mount by forcing every subsequent build to re-download every RPM.

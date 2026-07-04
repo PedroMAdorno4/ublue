@@ -94,8 +94,8 @@ telemetry_enabled = true
 gpu_poll_seconds = 5
 
 [theme]
-builtin = "Tokyo-Night"
-source = "builtin"
+builtin = "Tokyo-Night" # fallback palette, used only if source is reverted to "builtin"
+source = "wallpaper"
 
 [widget.clock]
 capsule = true

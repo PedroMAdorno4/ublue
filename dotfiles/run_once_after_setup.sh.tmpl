@@ -7,6 +7,7 @@ set -euo pipefail
 chmod +x "$HOME/.local/bin/switch-audio"
 chmod +x "$HOME/.local/bin/projectfinder"
 chmod +x "$HOME/.local/bin/tmux-sessionizer"
+chmod +x "$HOME/.local/bin/wallpaper-theme"
 
 # tmux plugin manager
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
@@ -15,7 +16,7 @@ fi
 
 # yazi whoosh bookmark plugin
 if [[ ! -d "$HOME/.config/yazi/plugins/whoosh.yazi" ]]; then
-    git clone --depth=1 https://github.com/sxyazi/whoosh.yazi ~/.config/yazi/plugins/whoosh.yazi
+    git clone --depth=1 https://github.com/WhoSowSee/whoosh.yazi ~/.config/yazi/plugins/whoosh.yazi
 fi
 
 # Ensure zsh history dir exists
@@ -24,11 +25,12 @@ mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/zsh"
 # Ensure npm-global dir exists
 mkdir -p "$HOME/.npm-global/bin"
 
+# Ensure the mpvpaper wallpaper video directory exists so the mpvpaper
+# services don't crash-loop on a missing playlist directory. This is left
+# empty on purpose -- drop your own wallpaper videos in here.
+mkdir -p "$HOME/videos/wallpapers/landscape"
+
 # Enable user systemd services for wallpaper and polkit
 systemctl --user enable --now mpvpaper-dp3.service mpvpaper-dp2.service || true
+systemctl --user enable --now wallpaper-theme.timer || true
 systemctl --user enable --now polkit-gnome-authentication-agent-1.service || true
-
-# Set default shell to zsh if not already
-if [[ "$SHELL" != "$(which zsh)" ]]; then
-    chsh -s "$(which zsh)"
-fi

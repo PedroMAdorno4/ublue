@@ -1,3 +1,5 @@
+@import url("colors.css");
+
 * {
     border: none;
     border-radius: 0;
@@ -8,43 +10,43 @@
 }
 
 window#waybar {
-    background: rgba(21, 18, 27, 0);
-    color: #cdd6f4;
+    background: alpha(@bg_color, 0);
+    color: @fg_color;
 }
 
 tooltip {
-    background: #1e1e2e;
+    background: @tooltip_bg_color;
     border-radius: 6px;
     border-width: 2px;
     border-style: solid;
-    border-color: #11111b;
+    border-color: @tooltip_border_color;
 }
 
 #workspaces button {
     padding: 5px;
-    color: #8c8c8c;
+    color: @fg_dim_color;
     margin-right: 5px;
 }
 
 #workspaces button.active {
-    color: #ced8ff;
+    color: @workspace_active_color;
 }
 
 #workspaces button.focused {
-    color: #a6adc8;
-    background: #eba0ac;
+    color: @workspace_focused_fg_color;
+    background: @workspace_focused_bg_color;
     border-radius: 6px;
 }
 
 #workspaces button.urgent {
-    color: #11111b;
-    background: #a6e3a1;
+    color: @workspace_urgent_fg_color;
+    background: @workspace_urgent_bg_color;
     border-radius: 6px;
 }
 
 #workspaces button:hover {
-    background: #11111b;
-    color: #cdd6f4;
+    background: @fg_hover_color;
+    color: @fg_color;
     border-radius: 6px;
 }
 
@@ -61,12 +63,12 @@ tooltip {
 #tray,
 #mpris,
 #backlight {
-    background: #1e1e2e;
+    background: @bg_color;
     opacity: 0.8;
     padding: 0px 6px;
     margin: 3px 0px;
     margin-top: 6px;
-    border: 1px solid #181825;
+    border: 1px solid @border_color;
 }
 
 #tray {
@@ -75,7 +77,7 @@ tooltip {
 }
 
 #workspaces {
-    background: #1e1e2e;
+    background: @bg_color;
     border-radius: 6px;
     margin-left: 8px;
     padding-right: 0px;
@@ -83,45 +85,45 @@ tooltip {
 }
 
 #clock {
-    color: #fab387;
+    color: @clock_color;
     border-radius: 6px;
     margin-left: 6px;
     margin-right: 8px;
 }
 
 #pulseaudio {
-    color: #89b4fa;
+    color: @pulseaudio_color;
     border-left: 0px;
     border-radius: 6px 0px 0px 6px;
     border-right: 0px;
 }
 
 #pulseaudio.microphone {
-    color: #cba6f7;
+    color: @mic_color;
     border-left: 0px;
     border-right: 0px;
     border-radius: 0px 6px 6px 0px;
 }
 
 #cpu {
-    color: #a6e3a1;
+    color: @cpu_color;
     border-radius: 0 6px 6px 0;
     margin-right: 6px;
     border-left: 0px;
 }
 
 #memory {
-    color: #a6e3a1;
+    color: @memory_color;
     border-radius: 6px 0px 0px 6px;
     margin-right: 0px;
     border-right: 0px;
 }
 
 #mpris {
-    color: #a6e3a1;
+    color: @mpris_color;
     border-radius: 6px;
 }
 
 #mpris > small {
-    color: #ffffff;
+    color: @fg_color;
 }
