@@ -1,0 +1,32 @@
+#!/bin/bash
+
+get_all_sinks() {
+    pactl list short sinks | cut -f 2
+}
+
+get_all_sink_inputs() {
+    pactl list short sink-inputs | cut -f 1
+}
+
+get_default_sink() {
+    pactl info | grep 'Default Sink' | cut -d':' -f 2
+}
+
+DEF_SINK=$(get_default_sink)
+for SINK in $(get_all_sinks); do
+    [ -z "$FIRST" ] && FIRST=$SINK
+    if [ " $SINK" = "$DEF_SINK" ]; then
+        NEXT=1
+    elif [ -n "$NEXT" ]; then
+        NEW_DEFAULT_SINK=$SINK
+        break
+    fi
+done
+
+[ -z "$NEW_DEFAULT_SINK" ] && NEW_DEFAULT_SINK=$FIRST
+
+pactl set-default-sink "$NEW_DEFAULT_SINK"
+
+for INPUT in $(get_all_sink_inputs); do
+    pactl move-sink-input "$INPUT" "$NEW_DEFAULT_SINK"
+done

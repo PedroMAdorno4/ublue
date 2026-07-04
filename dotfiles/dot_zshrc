@@ -1,0 +1,58 @@
+# antidote plugin manager
+source /usr/share/antidote/antidote.zsh
+antidote load
+
+# oh-my-posh prompt
+eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.json)"
+
+# direnv
+eval "$(direnv hook zsh)"
+
+# History
+HISTSIZE=9999
+SAVEHIST=9999
+HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/history"
+setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
+
+# Default keymap
+bindkey -e
+
+# Key bindings
+bindkey -s '^f' ' . projectfinder\n'
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
+# Aliases
+alias rb='git -C "$HOME/dotfiles" add -A && chezmoi apply'
+alias v='nvim'
+alias s='kitten ssh'
+alias ll='ls -lah'
+alias dcl='docker compose logs'
+alias dclf='docker compose logs -f'
+alias dcd='docker compose down'
+alias dcu='docker compose up'
+alias dcb='docker compose build'
+alias dcud='docker compose up -d'
+alias dl='docker compose logs'
+alias dlf='docker compose logs -f'
+alias dcs='docker compose ps'
+
+export PATH="$HOME/.npm-global/bin:$HOME/.local/bin:$PATH"
+
+# eza (ls replacement)
+alias ls='eza'
+alias la='eza -a'
+alias lt='eza --tree'
+
+# fzf shell integration
+source <(fzf --zsh)
+
+# yazi shell wrapper (changes directory on exit)
+function yy() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}

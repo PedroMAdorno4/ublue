@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    selected=$(find ~/pjx ~/3dp/ -mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf)
+fi
+
+if [[ $selected ]]; then
+    cd "$selected" || exit
+fi

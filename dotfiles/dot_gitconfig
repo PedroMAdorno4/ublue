@@ -1,0 +1,21 @@
+[user]
+	name = Pedro Adorno
+	email = pedroadorno99@gmail.com
+[signing]
+	key = ~/.ssh/id_ed25519
+	signByDefault = true
+[gpg]
+	format = ssh
+[commit]
+	gpgSign = true
+[rerere]
+	enabled = true
+[maintenance]
+	auto = false
+	strategy = incremental
+[rebase]
+	updateRefs = true
+[safe]
+	directory = /home/quatro/nix
+[core]
+	excludesFile = ~/.gitignore_global

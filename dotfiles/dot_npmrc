@@ -1,0 +1,4 @@
+prefix=${HOME}/.npm-global
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+always-auth=true
+@dexcare:registry=https://npm.pkg.github.com

@@ -1,0 +1,120 @@
+[audio]
+enable_sounds = true
+
+[bar]
+backgroundOpacity = 0.0
+density = "default"
+exclusive = true
+floating = true
+marginHorizontal = 0.25
+marginVertical = 0.25
+monitors = []
+outerCorners = true
+position = "top"
+showCapsule = true
+useSeparateOpacity = true
+
+    [bar.widgets]
+    background_opacity = 0.0
+    capsule = true
+    capsule_opacity = 0.5
+    capsule_thickness = 1.0
+    center = [ "media" ]
+    end = [ "tray", "input_volume", "volume", "bluetooth", "clock", "date", "control-center", "session" ]
+    margin_edge = 6
+    margin_ends = 8
+    padding = 0
+    shadow = false
+    start = [ "workspaces", "group:g1" ]
+    thickness = 30
+
+        [[bar.widgets.capsule_group]]
+        fill = "surface_variant"
+        id = "g1"
+        members = [ "cpu", "temp", "ram" ]
+        opacity = 0.5
+        padding = 6.0
+
+[battery.device."/org/freedesktop/UPower/devices/headset_dev_73_C9_2A_B3_F4_74"]
+warning_threshold = 10
+
+[dock]
+enabled = false
+
+[idle]
+behavior_order = [ "lock", "screen-off", "lock-and-suspend" ]
+
+    [idle.behavior.lock]
+    action = "lock"
+    enabled = false
+    timeout = 600
+
+    [idle.behavior.lock-and-suspend]
+    action = "lock_and_suspend"
+    enabled = false
+    timeout = 900
+
+    [idle.behavior.screen-off]
+    action = "screen_off"
+    enabled = true
+    timeout = 660
+
+[location]
+address = "Pouso Alegre, MG"
+
+[lockscreen]
+fingerprint = false
+
+[lockscreen_widgets]
+enabled = false
+
+[network]
+wifiEnabled = false
+
+[osd]
+background_opacity = 1.0
+offset_y = 20
+position = "bottom_center"
+
+[shell]
+launch_apps_as_systemd_services = true
+settings_show_advanced = true
+telemetry_enabled = true
+
+    [shell.mpris]
+    blacklist = [ "firefox" ]
+
+    [shell.panel]
+    launcher_compact = true
+
+    [shell.screenshot]
+    save_to_file = false
+
+[system.monitor]
+gpu_poll_seconds = 5
+
+[theme]
+builtin = "Tokyo-Night"
+source = "builtin"
+
+[widget.clock]
+capsule = true
+capsule_padding = 10.0
+format = "{:%H:%M:%S}"
+
+[widget.cpu]
+display = "text"
+
+[widget.date]
+capsule = true
+capsule_padding = 10.0
+format = "{:%a %d/%m}"
+
+[widget.media]
+hide_when_no_media = true
+
+[widget.ram]
+display = "text"
+
+[widget.temp]
+display = "text"

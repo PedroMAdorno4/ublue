@@ -1,0 +1,6 @@
+{
+  "log-driver": "json-file",
+  "userland-proxy": true,
+  "metrics-addr": "0.0.0.0:9323",
+  "live-restore": false
+}

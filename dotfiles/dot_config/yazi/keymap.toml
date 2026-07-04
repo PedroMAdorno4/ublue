@@ -1,0 +1,16 @@
+[manager]
+prepend_keymap = [
+  { on = "[",            run = "plugin whoosh jump_by_key",   desc = "Jump bookmark by key" },
+  { on = "}",            run = "plugin whoosh jump_by_fzf",   desc = "Direct fuzzy search for bookmarks" },
+  { on = ["]", "a"],     run = "plugin whoosh save",          desc = "Add bookmark (hovered)" },
+  { on = ["]", "A"],     run = "plugin whoosh save_cwd",      desc = "Add bookmark (cwd)" },
+  { on = ["]", "t"],     run = "plugin whoosh save_temp",     desc = "Add temp bookmark (hovered)" },
+  { on = ["]", "T"],     run = "plugin whoosh save_cwd_temp", desc = "Add temp bookmark (cwd)" },
+  { on = "<A-k>",        run = "plugin whoosh jump_key_k",    desc = "Jump to bookmark k" },
+  { on = ["]", "f"],     run = "plugin whoosh jump_by_fzf",   desc = "Jump bookmark by fzf" },
+  { on = ["]", "d"],     run = "plugin whoosh delete_by_key", desc = "Delete bookmark by key" },
+  { on = ["]", "D"],     run = "plugin whoosh delete_by_fzf", desc = "Delete bookmarks by fzf" },
+  { on = ["]", "C"],     run = "plugin whoosh delete_all",    desc = "Delete all bookmarks" },
+  { on = ["]", "r"],     run = "plugin whoosh rename_by_key", desc = "Rename bookmark by key" },
+  { on = ["]", "R"],     run = "plugin whoosh rename_by_fzf", desc = "Rename bookmark by fzf" },
+]

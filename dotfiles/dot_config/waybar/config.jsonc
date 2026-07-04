@@ -1,0 +1,81 @@
+{
+    "exclusive": true,
+    "gtk-layer-shell": true,
+    "height": 30,
+    "layer": "top",
+    "mod": "dock",
+    "modules-center": ["mpris"],
+    "modules-left": ["hyprland/workspaces"],
+    "modules-right": [
+        "memory",
+        "cpu",
+        "pulseaudio",
+        "pulseaudio#microphone",
+        "clock",
+        "tray"
+    ],
+    "tray": {
+        "icon-size": 18,
+        "spacing": 10
+    },
+    "clock": {
+        "format": " {:%H:%M   %a, %b %e}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "cpu": {
+        "format": "󰍛 {usage}%",
+        "interval": 10
+    },
+    "memory": {
+        "format": "󰾅 {used}GB",
+        "interval": 30,
+        "max-length": 10,
+        "tooltip": true,
+        "tooltip-format": " {used:0.1f}GB/{total:0.1f}GB"
+    },
+    "hyprland/workspaces": {
+        "active-only": true,
+        "all-outputs": false,
+        "disable-scroll": true,
+        "on-click": "activate",
+        "sort-by-number": true
+    },
+    "mpris": {
+        "artist-len": 20,
+        "player": "ncspot",
+        "format": "{status_icon} {artist} - {title} <small>[{position}-{length}]</small>",
+        "interval": 1,
+        "status-icons": {
+            "paused": "|>",
+            "playing": "||"
+        },
+        "title-len": 30
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-icons": {
+            "car": "",
+            "default": ["", "", ""],
+            "hands-free": "",
+            "headphone": "",
+            "headset": "",
+            "phone": "",
+            "portable": ""
+        },
+        "format-muted": " Muted",
+        "on-click": "pamixer -t",
+        "on-scroll-down": "pamixer -d 5",
+        "on-scroll-up": "pamixer -i 5",
+        "scroll-step": 5,
+        "tooltip": false
+    },
+    "pulseaudio#microphone": {
+        "format": "{format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": " Muted",
+        "on-click": "pamixer --default-source -t",
+        "on-scroll-down": "pamixer --default-source -d 5",
+        "on-scroll-up": "pamixer --default-source -i 5",
+        "scroll-step": 5
+    }
+}

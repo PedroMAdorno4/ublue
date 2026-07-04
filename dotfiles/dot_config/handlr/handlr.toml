@@ -1,0 +1,4 @@
+enable_selector = true
+selector = "walker -d -k -p 'Open with:'"
+term_exec_args = '-e'
+expand_wildcards = true
