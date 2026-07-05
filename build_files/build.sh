@@ -2,6 +2,12 @@
 
 set -ouex pipefail
 
+# /root and /usr/local are symlinks to /var/roothome and /var/usrlocal, normally
+# materialized at boot by rpm-ostree-0-integration.conf's systemd-tmpfiles rule,
+# which never runs during image build. Without these, anything that mkdirs
+# through the dangling symlinks (devbox's installer, `npm install -g`) fails.
+mkdir -p /var/roothome /var/usrlocal
+
 # Copy system_files/ to /
 cp -avf "/ctx/system_files"/. /
 
@@ -16,9 +22,16 @@ cp -avr "/ctx/dotfiles"/. /usr/share/ublue-dotfiles/
 dnf5 -y copr enable atim/lazygit
 dnf5 -y copr enable lionheartp/Hyprland
 dnf5 -y copr enable solopasha/hyprland
+dnf5 -y copr enable hazel-bunny/ricing
+dnf5 -y copr enable grahamwhiteuk/bruno
+dnf5 -y copr enable vertigo-red/bottles
 
 # Terra repo (https://terra.fyralabs.com) for packages missing from the base repos
-dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+# terra-release already ships in the bazzite base image with its repos disabled by
+# default, so just enable them instead of redefining "terra" via --repofrompath
+# (which collides with the existing repo id and fails with "Id is present more
+# than once in the configuration").
+dnf5 config-manager setopt terra.enabled=1 terra-extras.enabled=1 terra-mesa.enabled=1
 
 # Brave repo (https://brave.com/linux/) for brave-browser
 dnf5 config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
@@ -31,7 +44,10 @@ dnf5 config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3
 # forcing every rebuild to re-download every package from the network).
 dnf5 config-manager setopt keepcache=1
 
-dnf5 install -y --skip-unavailable \
+# --skip-broken drops packages with unresolvable deps (e.g. colloid-gtk-theme
+# needs the now-retired gnome-themes-extra; quickemu needs mesa-demos, which
+# the bazzite base excludes) instead of failing the whole transaction.
+dnf5 install -y --skip-unavailable --skip-broken \
     zsh \
     git \
     chezmoi \
@@ -46,7 +62,6 @@ dnf5 install -y --skip-unavailable \
     socat \
     yazi \
     lazygit \
-    lazydocker \
     btop \
     fastfetch \
     mpv \
@@ -95,14 +110,14 @@ dnf5 install -y --skip-unavailable \
     satty \
     swappy \
     wofi \
-    waybar \
     wlogout \
     hyprpicker \
     hyprlock \
     hyprpolkitagent \
-    uwsm \
     niri \
     hyprland \
+    quickshell \
+    xwayland-satellite \
     xdg-desktop-portal-gtk \
     xdg-desktop-portal-gnome \
     blueman \
@@ -114,6 +129,7 @@ dnf5 install -y --skip-unavailable \
     heroic-games-launcher \
     prismlauncher \
     discord \
+    vesktop \
     brave-browser \
     firefox \
     filezilla \
@@ -145,8 +161,6 @@ dnf5 install -y --skip-unavailable \
     tree-sitter-cli \
     gopls \
     clang-tools-extra \
-    python3-lsp-server \
-    nodejs-bash-language-server \
     direnv \
     eza \
     handlr-regex \
@@ -163,7 +177,10 @@ dnf5 install -y --skip-unavailable \
     libvirt \
     qemu-kvm \
     qemu-virtiofsd \
+    quickemu \
     spice-vdagent \
+    spice-gtk3 \
+    spice-glib \
     dnsmasq \
     podman \
     podman-compose \
@@ -185,12 +202,26 @@ dnf5 install -y --skip-unavailable \
     qt6ct \
     breeze-icon-theme \
     adw-gtk3-theme \
-    nodejs
+    colloid-gtk-theme \
+    nodejs \
+    nodejs-npm \
+    bruno \
+    bottles
+
+### LibreOffice (nix config used the qt6 build; libreoffice-kf6 is Fedora's closest analog)
+dnf5 install -y --skip-unavailable \
+    libreoffice-kf6 \
+    libreoffice-writer \
+    libreoffice-calc \
+    libreoffice-impress
 
 # Disable COPRs so they don't persist in the final image
 dnf5 -y copr disable atim/lazygit
 dnf5 -y copr disable lionheartp/Hyprland
 dnf5 -y copr disable solopasha/hyprland
+dnf5 -y copr disable hazel-bunny/ricing
+dnf5 -y copr disable grahamwhiteuk/bruno
+dnf5 -y copr disable vertigo-red/bottles
 
 ### Fonts
 
@@ -245,12 +276,44 @@ CARGO_HOME=/tmp/cargo cargo install wl-gammarelay-rs --root /usr
 
 ### matugen (Material-You palette generator, not in Fedora repos)
 # Release asset filenames embed the version, so the /latest/download/ shortcut
-# doesn't work here (unlike oh-my-posh above) -- resolve the tag via the API first.
-MATUGEN_TAG=$(curl -fsSL "https://api.github.com/repos/InioX/matugen/releases/latest" | jq -r .tag_name)
+# doesn't work here (unlike oh-my-posh above) -- resolve the tag by following
+# the /releases/latest redirect instead of the api.github.com endpoint, which
+# is far more aggressively rate-limited for unauthenticated CI runners.
+MATUGEN_TAG=$(curl -fsSL -o /dev/null -w '%{url_effective}' "https://github.com/InioX/matugen/releases/latest" | sed 's#.*/tag/##')
 MATUGEN_VERSION="${MATUGEN_TAG#v}"
 curl -fsSL "https://github.com/InioX/matugen/releases/download/${MATUGEN_TAG}/matugen-${MATUGEN_VERSION}-x86_64.tar.gz" \
     | tar -xzf - -C /usr/bin/ matugen
 chmod +x /usr/bin/matugen
+
+### youtube-music (pear-devs/pear-desktop, formerly th-ch/youtube-music -- not in Fedora repos)
+YTM_TAG=$(curl -fsSL -o /dev/null -w '%{url_effective}' "https://github.com/pear-devs/pear-desktop/releases/latest" | sed 's#.*/tag/##')
+YTM_VERSION="${YTM_TAG#v}"
+curl -fsSL "https://github.com/pear-devs/pear-desktop/releases/download/${YTM_TAG}/youtube-music-${YTM_VERSION}.x86_64.rpm" -o /tmp/ytm.rpm
+dnf5 install -y /tmp/ytm.rpm
+rm -f /tmp/ytm.rpm
+
+### hydralauncher (hydralauncher/hydra -- not in Fedora repos)
+HYDRA_TAG=$(curl -fsSL -o /dev/null -w '%{url_effective}' "https://github.com/hydralauncher/hydra/releases/latest" | sed 's#.*/tag/##')
+HYDRA_VERSION="${HYDRA_TAG#v}"
+curl -fsSL "https://github.com/hydralauncher/hydra/releases/download/${HYDRA_TAG}/hydralauncher-${HYDRA_VERSION}.x86_64.rpm" -o /tmp/hydra.rpm
+dnf5 install -y /tmp/hydra.rpm
+rm -f /tmp/hydra.rpm
+
+### magic-wormhole-rs (Rust implementation, provides the wormhole-rs binary; not in Fedora repos)
+CARGO_HOME=/tmp/cargo cargo install --locked magic-wormhole-cli --root /usr
+
+### devbox (jetify-com/devbox, not in Fedora repos)
+curl -fsSL https://releases.jetify.com/devbox -o /tmp/devbox-install.sh
+FORCE=1 bash /tmp/devbox-install.sh
+rm -f /tmp/devbox-install.sh
+
+### colloid-icon-theme (vinceliuice/Colloid-icon-theme, not in Fedora repos)
+git clone --depth=1 https://github.com/vinceliuice/Colloid-icon-theme.git /tmp/colloid-icon-theme
+/tmp/colloid-icon-theme/install.sh -d /usr/share/icons -s all -t all
+rm -rf /tmp/colloid-icon-theme
+
+### ergogen (keyboard layout generator, npm-only)
+npm install -g ergogen
 
 ### Cleanup
 # Note: intentionally not running `dnf5 clean all` here. /var/cache is a

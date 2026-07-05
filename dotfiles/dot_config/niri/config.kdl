@@ -98,7 +98,7 @@ layout {
 
 include "./colors.kdl" optional=true
 
-spawn-at-startup "firefox"
+spawn-at-startup "flatpak" "run" "org.mozilla.firefox"
 spawn-at-startup "noctalia"
 spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "NIRI_SOCKET" "XDG_DATA_DIRS"
 spawn-at-startup "pear-desktop"
