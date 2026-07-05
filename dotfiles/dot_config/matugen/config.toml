@@ -16,6 +16,10 @@ post_hook = 'gsettings set org.gnome.desktop.interface color-scheme prefer-light
 input_path = 'templates/kitty-colors.conf'
 output_path = '~/.config/kitty/colors.conf'
 
+[templates.nvim]
+input_path = 'templates/nvim-colors.lua'
+output_path = '~/.config/nvim/lua/colors.lua'
+
 [templates.waybar]
 input_path = 'templates/waybar-colors.css'
 output_path = '~/.config/waybar/colors.css'

@@ -17,6 +17,12 @@ dnf5 -y copr enable atim/lazygit
 dnf5 -y copr enable lionheartp/Hyprland
 dnf5 -y copr enable solopasha/hyprland
 
+# Terra repo (https://terra.fyralabs.com) for packages missing from the base repos
+dnf5 install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+
+# Brave repo (https://brave.com/linux/) for brave-browser
+dnf5 config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+
 ### System packages
 
 # Keep downloaded RPMs in the /var/cache cache mount across builds instead of
@@ -130,12 +136,17 @@ dnf5 install -y --skip-unavailable \
     lact \
     ydotool \
     openvpn \
-    magic-wormhole \
+    python3-magic-wormhole \
     rpi-imager \
     baobab \
     gcc \
     cargo \
     rustc \
+    tree-sitter-cli \
+    gopls \
+    clang-tools-extra \
+    python3-lsp-server \
+    nodejs-bash-language-server \
     direnv \
     eza \
     handlr-regex \
@@ -164,16 +175,17 @@ dnf5 install -y --skip-unavailable \
     fcitx5-gtk \
     fcitx5-mozc \
     upower \
-    polkit-gnome \
     noctalia-git \
     hyprshot \
     brightnessctl \
     wofi-emoji \
-    bibata-cursor-themes \
+    bibata-cursor-theme \
     util-linux-user \
     qt5ct \
     qt6ct \
-    breeze-icon-theme
+    breeze-icon-theme \
+    adw-gtk3-theme \
+    nodejs
 
 # Disable COPRs so they don't persist in the final image
 dnf5 -y copr disable atim/lazygit

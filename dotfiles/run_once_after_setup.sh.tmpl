@@ -30,7 +30,6 @@ mkdir -p "$HOME/.npm-global/bin"
 # empty on purpose -- drop your own wallpaper videos in here.
 mkdir -p "$HOME/videos/wallpapers/landscape"
 
-# Enable user systemd services for wallpaper and polkit
+# Enable user systemd services for wallpaper
 systemctl --user enable --now mpvpaper-dp3.service mpvpaper-dp2.service || true
 systemctl --user enable --now wallpaper-theme.timer || true
-systemctl --user enable --now polkit-gnome-authentication-agent-1.service || true

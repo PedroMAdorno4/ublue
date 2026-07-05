@@ -16,7 +16,7 @@
 
 set -uo pipefail
 
-WALLPAPER_DIR="$HOME/videos/wallpapers/landscape"
+WALLPAPER_DIR="$(realpath -q "$HOME/videos/wallpapers/landscape")"
 MPV_SOCKET="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/mpvpaper-dp2.sock"
 CACHE_DIR="$HOME/.cache/wallpaper-theme"
 CACHE_FILE="$CACHE_DIR/current"

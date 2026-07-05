@@ -1,0 +1,12 @@
+[Unit]
+Description=mpvpaper wallpaper on HDMI-A-1
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=mpvpaper -o "no-audio --loop-file=100 --reset-on-next-file=loop-file --loop-playlist shuffle --profile=fast" HDMI-A-1 %h/videos/wallpapers/landscape/
+Restart=on-failure
+TimeoutStopSec=5
+
+[Install]
+WantedBy=graphical-session.target

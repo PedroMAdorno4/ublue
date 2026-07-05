@@ -15,6 +15,6 @@
 [rebase]
 	updateRefs = true
 [safe]
-	directory = /home/quatro/nix
+	directory = /var/home/quatro/nix
 [core]
 	excludesFile = ~/.gitignore_global
