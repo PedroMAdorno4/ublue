@@ -206,7 +206,8 @@ dnf5 install -y --skip-unavailable --skip-broken \
     nodejs \
     nodejs-npm \
     bruno \
-    bottles
+    bottles \
+    wev
 
 ### LibreOffice (nix config used the qt6 build; libreoffice-kf6 is Fedora's closest analog)
 dnf5 install -y --skip-unavailable \
@@ -244,7 +245,7 @@ fc-cache -f /usr/share/fonts/JetBrainsMonoNerdFont/
 ### Services
 
 # Core services already enabled by bazzite base, enable additional ones:
-systemctl enable earlyoom.service
+# systemctl enable earlyoom.service
 systemctl enable libvirtd.service || true
 systemctl enable bluetooth.service
 systemctl enable tailscaled.service
