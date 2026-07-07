@@ -1,0 +1,9 @@
+[Unit]
+Description=Periodically rotate per-monitor wallpapers
+
+[Timer]
+OnBootSec=15s
+OnUnitActiveSec=30m
+
+[Install]
+WantedBy=timers.target

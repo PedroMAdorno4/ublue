@@ -1,7 +1,0 @@
-[Unit]
-Description=Regenerate matugen theme from the current mpvpaper wallpaper frame
-PartOf=mpvpaper-dp2.service
-
-[Service]
-Type=oneshot
-ExecStart=%h/.local/bin/wallpaper-theme

@@ -144,7 +144,7 @@ dnf5 install -y --skip-unavailable --skip-broken \
     flatpak \
     protonup-qt \
     ffmpeg \
-    mpvpaper \
+    swww \
     wl-screenrec \
     vulkan-tools \
     clinfo \

@@ -7,7 +7,7 @@ set -euo pipefail
 chmod +x "$HOME/.local/bin/switch-audio"
 chmod +x "$HOME/.local/bin/projectfinder"
 chmod +x "$HOME/.local/bin/tmux-sessionizer"
-chmod +x "$HOME/.local/bin/wallpaper-theme"
+chmod +x "$HOME/.local/bin/wallpaper-cycle"
 
 # tmux plugin manager
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
@@ -25,11 +25,11 @@ mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/zsh"
 # Ensure npm-global dir exists
 mkdir -p "$HOME/.npm-global/bin"
 
-# Ensure the mpvpaper wallpaper video directory exists so the mpvpaper
-# services don't crash-loop on a missing playlist directory. This is left
-# empty on purpose -- drop your own wallpaper videos in here.
-mkdir -p "$HOME/videos/wallpapers/landscape"
+# Ensure the wallpaper directory exists so wallpaper-cycle doesn't fail on a
+# missing directory. Subdirectories are named after monitor resolutions
+# (e.g. 1920x1080, 2560x1440); drop your own wallpaper images in there.
+mkdir -p "$HOME/Pictures/wallpapers"
 
 # Enable user systemd services for wallpaper
-systemctl --user enable --now mpvpaper-dp3.service mpvpaper-dp2.service || true
-systemctl --user enable --now wallpaper-theme.timer || true
+systemctl --user enable --now swww-daemon.service || true
+systemctl --user enable --now wallpaper-cycle.timer || true

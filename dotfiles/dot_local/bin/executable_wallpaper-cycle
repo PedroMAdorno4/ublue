@@ -1,0 +1,38 @@
+#!/bin/bash
+# Rotate each connected monitor's wallpaper to a random image sized for its
+# current resolution, then regenerate the matugen theme from the
+# color-source monitor's pick.
+#
+# DP-2 is the sole color source for theming purposes, matching the previous
+# mpvpaper-based setup -- this is an intentional simplification, not an
+# oversight.
+
+set -uo pipefail
+
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+THEME_OUTPUT="DP-2"
+
+# Give swww-daemon a moment to create its socket if it just started.
+for _ in $(seq 1 10); do
+    swww query >/dev/null 2>&1 && break
+    sleep 1
+done
+
+mapfile -t outputs < <(niri msg -j outputs |
+    jq -r 'to_entries[] | select(.value.logical != null) |
+        "\(.key) \(.value.modes[.value.current_mode].width) \(.value.modes[.value.current_mode].height)"')
+
+for entry in "${outputs[@]}"; do
+    read -r name width height <<< "$entry"
+    dir="$WALLPAPER_DIR/${width}x${height}"
+    [[ -d "$dir" ]] || continue
+
+    image=$(find "$dir" -maxdepth 1 -type f | shuf -n1)
+    [[ -n "$image" ]] || continue
+
+    swww img -o "$name" --transition-type fade --transition-duration 2 "$image"
+
+    if [[ "$name" == "$THEME_OUTPUT" ]]; then
+        matugen image "$image" >/dev/null 2>&1
+    fi
+done

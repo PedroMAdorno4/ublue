@@ -1,0 +1,8 @@
+[Unit]
+Description=Rotate per-monitor wallpapers and regenerate the matugen theme
+PartOf=graphical-session.target
+After=swww-daemon.service
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/wallpaper-cycle
