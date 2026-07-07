@@ -36,6 +36,10 @@ dnf5 config-manager setopt terra.enabled=1 terra-extras.enabled=1 terra-mesa.ena
 # Brave repo (https://brave.com/linux/) for brave-browser
 dnf5 config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
 
+# GitHub CLI repo (https://cli.github.com) for gh
+dnf5 -y install dnf5-plugins
+dnf5 config-manager addrepo --from-repofile=https://cli.github.com/packages/rpm/gh-cli.repo
+
 ### System packages
 
 # Keep downloaded RPMs in the /var/cache cache mount across builds instead of
@@ -51,6 +55,7 @@ dnf5 install -y --skip-unavailable --skip-broken \
     zsh \
     git \
     chezmoi \
+    gh \
     vim \
     neovim \
     tmux \
