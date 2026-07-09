@@ -26,3 +26,4 @@ opt.mouse = ""
 opt.completeopt = { "menu", "menuone", "noselect" }
 opt.winborder = "rounded"
 opt.clipboard = "unnamedplus"
+opt.foldenable = false

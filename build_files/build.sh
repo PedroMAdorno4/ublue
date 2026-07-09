@@ -165,6 +165,7 @@ dnf5 install -y --skip-unavailable --skip-broken \
     rustc \
     tree-sitter-cli \
     gopls \
+    dotnet-sdk-10.0 \
     clang-tools-extra \
     direnv \
     eza \
