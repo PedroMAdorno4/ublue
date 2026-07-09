@@ -3,6 +3,21 @@ $mainMod = SUPER
 source = ./colors.conf
 
 # Monitors
+{{- if eq .pcType "laptop" }}
+monitor = eDP-1,preferred,auto,1
+
+# Workspace bindings to monitors
+workspace = 1,  monitor:eDP-1, default:true
+workspace = 2,  monitor:eDP-1
+workspace = 3,  monitor:eDP-1
+workspace = 4,  monitor:eDP-1
+workspace = 5,  monitor:eDP-1
+workspace = 6,  monitor:eDP-1
+workspace = 7,  monitor:eDP-1
+workspace = 8,  monitor:eDP-1
+workspace = 9,  monitor:eDP-1
+workspace = 10, monitor:eDP-1
+{{- else }}
 monitor = DP-3,1920x1080@144,4480x360,1
 monitor = DP-2,2560x1440@165,1920x0,1
 monitor = HDMI-A-1,1920x1080@60,0x360,1
@@ -28,6 +43,7 @@ workspace = 17, monitor:DP-2
 workspace = 18, monitor:DP-2
 workspace = 19, monitor:DP-2
 workspace = 20, monitor:DP-2
+{{- end }}
 
 # Input
 input {
@@ -101,7 +117,9 @@ exec-once = hyprpanel
 exec-once = fcitx5 -d -r
 exec-once = fcitx5-remote -r
 exec-once = [workspace 1 silent] firefox
+{{- if ne .pcType "laptop" }}
 exec-once = [workspace 20 silent] pear-desktop
+{{- end }}
 
 # Window rules
 windowrule = float,title:^(Picture in picture)$
@@ -110,7 +128,9 @@ windowrule = size 560 315,title:^(Picture in picture)$
 windowrule = move 100%-w-10 100%-w-10,title:^(Picture in picture)$
 
 windowrule = workspace 1 silent, class:^(brave-browser)$, title:^(Brave: Main)$
+{{- if ne .pcType "laptop" }}
 windowrule = workspace 11 silent, class:^(brave-browser)$, title:^(Brave: Secondary)$
+{{- end }}
 
 windowrule = float,title:^(Picture-in-Picture)$
 windowrule = pin,title:^(Picture-in-Picture)$
@@ -120,7 +140,9 @@ windowrule = move 100%-w-10 100%-w-10,title:^(Picture-in-Picture)$
 windowrule = float,title:^(Torrent Options)$
 windowrule = workspace 5 silent, class:^(transmission-gtk)$, title:^(Transmission)$
 
+{{- if ne .pcType "laptop" }}
 windowrule = workspace 18 silent, class:^(Waydroid)$, title:^(Waydroid)$
+{{- end }}
 windowrule = float, class:^(Waydroid)$, title:^(Waydroid)$
 windowrule = size 475 770, class:^(Waydroid)$, title:^(Waydroid)$
 

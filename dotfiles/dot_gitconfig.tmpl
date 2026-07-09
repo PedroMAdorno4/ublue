@@ -1,7 +1,11 @@
 [user]
-	name = Pedro Adorno
-	email = pedroadorno99@gmail.com
+	name = {{ .name }}
+	email = {{ .email }}
+{{- if eq .role "work" }}
+  signingkey = ~/.ssh/id_ed25519_work
+{{- else }}
   signingkey = ~/.ssh/id_ed25519
+{{- end }}
 	signByDefault = true
 [gpg]
 	format = ssh

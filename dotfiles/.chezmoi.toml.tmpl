@@ -1,3 +1,13 @@
+{{ $username := promptChoiceOnce . "username" "Username" (list "quatro" "padorno") .chezmoi.username -}}
+{{ $role := promptChoiceOnce . "role" "Role (work or personal)" (list "personal" "work") "personal" -}}
+{{ $pcType := promptChoiceOnce . "pcType" "PC type (desktop or laptop)" (list "desktop" "laptop") "desktop" -}}
 [data]
+    username = "{{ $username }}"
+    role = "{{ $role }}"
+    pcType = "{{ $pcType }}"
     name = "Pedro Adorno"
+    {{- if eq $role "work" }}
+    email = "{{ promptStringOnce . "email" "Email address" "work@example.com" }}"
+    {{- else }}
     email = "{{ promptStringOnce . "email" "Email address" "pedroadorno99@gmail.com" }}"
+    {{- end }}

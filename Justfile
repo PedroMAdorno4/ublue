@@ -57,6 +57,27 @@ clean:
 sudo-clean:
     just sudoif just clean
 
+# Apply chezmoi dotfiles for one or more local users (defaults to all local users with a home dir)
+[group('Utility')]
+chezmoi-apply *users:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    SOURCE_DIR="{{ source_directory() }}/dotfiles"
+    USERS=({{ users }})
+    if [[ ${#USERS[@]} -eq 0 ]]; then
+        USERS=($(getent passwd | awk -F: '$3 >= 1000 && $3 < 60000 {print $1}'))
+    fi
+
+    for target_user in "${USERS[@]}"; do
+        echo "==> Applying chezmoi dotfiles for ${target_user}"
+        if [[ "${target_user}" == "${USER}" ]]; then
+            chezmoi init --source="${SOURCE_DIR}" --apply
+        else
+            sudo -u "${target_user}" -H chezmoi init --source="${SOURCE_DIR}" --apply
+        fi
+    done
+
 # sudoif bash function
 [group('Utility')]
 [private]
