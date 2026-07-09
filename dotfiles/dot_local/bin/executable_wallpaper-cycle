@@ -12,9 +12,9 @@ set -uo pipefail
 WALLPAPER_DIR="$HOME/Pictures/wallpapers"
 THEME_OUTPUT="DP-2"
 
-# Give swww-daemon a moment to create its socket if it just started.
+# Give awww-daemon a moment to create its socket if it just started.
 for _ in $(seq 1 10); do
-    swww query >/dev/null 2>&1 && break
+    awww query >/dev/null 2>&1 && break
     sleep 1
 done
 
@@ -30,7 +30,7 @@ for entry in "${outputs[@]}"; do
     image=$(find "$dir" -maxdepth 1 -type f | shuf -n1)
     [[ -n "$image" ]] || continue
 
-    swww img -o "$name" --transition-type fade --transition-duration 2 "$image"
+    awww img -o "$name" --transition-type fade --transition-duration 2 "$image"
 
     if [[ "$name" == "$THEME_OUTPUT" ]]; then
         matugen image "$image" >/dev/null 2>&1

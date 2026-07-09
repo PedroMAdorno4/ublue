@@ -1,10 +1,10 @@
 [Unit]
-Description=swww wallpaper daemon
+Description=awww wallpaper daemon
 PartOf=graphical-session.target
 After=graphical-session.target
 
 [Service]
-ExecStart=swww-daemon
+ExecStart=awww-daemon
 Restart=on-failure
 TimeoutStopSec=5
 

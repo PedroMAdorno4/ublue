@@ -102,7 +102,7 @@ spawn-at-startup "flatpak" "run" "org.mozilla.firefox"
 spawn-at-startup "noctalia"
 spawn-at-startup "dbus-update-activation-environment" "--systemd" "DISPLAY" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "NIRI_SOCKET" "XDG_DATA_DIRS"
 spawn-at-startup "pear-desktop"
-spawn-at-startup "systemctl" "--user" "start" "swww-daemon.service"
+spawn-at-startup "systemctl" "--user" "start" "awww-daemon.service"
 
 hotkey-overlay {
     skip-at-startup
