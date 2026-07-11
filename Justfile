@@ -72,8 +72,12 @@ chezmoi-apply *users:
     for target_user in "${USERS[@]}"; do
         echo "==> Applying chezmoi dotfiles for ${target_user}"
         if [[ "${target_user}" == "${USER}" ]]; then
+            # Fold any local edits back into the source state first, so apply has
+            # nothing left to prompt about ("$file has changed since chezmoi last wrote it").
+            chezmoi re-add --source="${SOURCE_DIR}"
             chezmoi init --source="${SOURCE_DIR}" --apply
         else
+            sudo -u "${target_user}" -H chezmoi re-add --source="${SOURCE_DIR}"
             sudo -u "${target_user}" -H chezmoi init --source="${SOURCE_DIR}" --apply
         fi
     done

@@ -307,7 +307,7 @@ binds {
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
-    Pause { spawn-sh "switch-audio"; }
+    Pause { spawn-sh "$HOME/.local/bin/switch-audio"; }
 
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
