@@ -25,6 +25,7 @@ dnf5 -y copr enable solopasha/hyprland
 dnf5 -y copr enable hazel-bunny/ricing
 dnf5 -y copr enable grahamwhiteuk/bruno
 dnf5 -y copr enable vertigo-red/bottles
+dnf5 -y copr enable faugus/faugus-launcher
 
 # Terra repo (https://terra.fyralabs.com) for packages missing from the base repos
 # terra-release already ships in the bazzite base image with its repos disabled by
@@ -213,7 +214,8 @@ dnf5 install -y --skip-unavailable --skip-broken \
     nodejs-npm \
     bruno \
     bottles \
-    wev
+    wev \
+    faugus-launcher
 
 ### LibreOffice (nix config used the qt6 build; libreoffice-kf6 is Fedora's closest analog)
 dnf5 install -y --skip-unavailable \
@@ -229,6 +231,7 @@ dnf5 -y copr disable solopasha/hyprland
 dnf5 -y copr disable hazel-bunny/ricing
 dnf5 -y copr disable grahamwhiteuk/bruno
 dnf5 -y copr disable vertigo-red/bottles
+dnf5 -y copr disable faugus/faugus-launcher
 
 ### Fonts
 

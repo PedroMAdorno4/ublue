@@ -1,0 +1,19 @@
+#!/bin/bash
+# Pulls the latest ublue repo changes and re-applies chezmoi dotfiles for all users.
+# Usable from any cwd, by either user, since each user's own clone lives at ~/pjx/ublue.
+set -euo pipefail
+
+REPO_DIR="${HOME}/pjx/ublue"
+
+if [[ ! -d "${REPO_DIR}" ]]; then
+    echo "error: ${REPO_DIR} not found" >&2
+    exit 1
+fi
+
+echo "==> Pulling latest changes in ${REPO_DIR}"
+git -C "${REPO_DIR}" pull
+
+echo "==> Applying chezmoi dotfiles"
+# --working-directory/--justfile so dotenv-load and source_directory() resolve
+# against the repo, regardless of the caller's actual working directory.
+just --justfile "${REPO_DIR}/Justfile" --working-directory "${REPO_DIR}" chezmoi-apply
