@@ -29,6 +29,11 @@ environment {
     QT_QPA_PLATFORMTHEME "qt6ct"
 }
 
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 24
+}
+
 // Disables middle click pasting
 clipboard {
     disable-primary
