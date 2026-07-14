@@ -1,6 +1,6 @@
 #!/bin/bash
-# Rotate each connected monitor's wallpaper to a random image sized for its
-# current resolution, then regenerate the matugen theme from the
+# Rotate each connected monitor's wallpaper to a random image matching its
+# current aspect ratio, then regenerate the matugen theme from the
 # color-source monitor's pick.
 #
 # DP-2 is the sole color source for theming purposes, matching the previous
@@ -24,7 +24,12 @@ mapfile -t outputs < <(niri msg -j outputs |
 
 for entry in "${outputs[@]}"; do
     read -r name width height <<< "$entry"
-    dir="$WALLPAPER_DIR/${width}x${height}"
+    a=$width; b=$height
+    while [[ "$b" -ne 0 ]]; do
+        a=$((a % b)); read -r a b <<< "$b $a"
+    done
+    gcd=$a
+    dir="$WALLPAPER_DIR/$((width / gcd))x$((height / gcd))"
     [[ -d "$dir" ]] || continue
 
     image=$(find "$dir" -maxdepth 1 -type f | shuf -n1)
