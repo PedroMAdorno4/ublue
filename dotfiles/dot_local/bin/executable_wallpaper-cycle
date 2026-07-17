@@ -18,6 +18,15 @@ for _ in $(seq 1 10); do
     sleep 1
 done
 
+# At login, niri's dbus-update-activation-environment spawn-at-startup command
+# may not have propagated NIRI_SOCKET into the systemd user environment yet.
+for _ in $(seq 1 10); do
+    [[ -n "${NIRI_SOCKET:-}" ]] && break
+    sleep 1
+    eval "$(systemctl --user show-environment | grep ^NIRI_SOCKET=)"
+    export NIRI_SOCKET
+done
+
 mapfile -t outputs < <(niri msg -j outputs |
     jq -r 'to_entries[] | select(.value.logical != null) |
         "\(.key) \(.value.modes[.value.current_mode].width) \(.value.modes[.value.current_mode].height)"')

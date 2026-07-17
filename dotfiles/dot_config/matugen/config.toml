@@ -23,7 +23,7 @@ output_path = '~/.config/nvim/lua/colors.lua'
 [templates.waybar]
 input_path = 'templates/waybar-colors.css'
 output_path = '~/.config/waybar/colors.css'
-post_hook = 'pkill -SIGUSR2 waybar'
+post_hook = 'pkill -SIGUSR2 waybar; true'
 
 [templates.wofi]
 input_path = 'templates/wofi-colors.css'
@@ -32,7 +32,7 @@ output_path = '~/.config/wofi/colors.css'
 [templates.hyprland]
 input_path = 'templates/hyprland-colors.conf'
 output_path = '~/.config/hypr/colors.conf'
-post_hook = 'hyprctl reload'
+post_hook = 'pgrep -x Hyprland >/dev/null && hyprctl reload; true'
 
 [templates.niri]
 input_path = 'templates/niri-colors.kdl'

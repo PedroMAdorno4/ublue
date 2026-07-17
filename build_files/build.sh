@@ -26,6 +26,7 @@ dnf5 -y copr enable hazel-bunny/ricing
 dnf5 -y copr enable grahamwhiteuk/bruno
 dnf5 -y copr enable vertigo-red/bottles
 dnf5 -y copr enable faugus/faugus-launcher
+dnf5 -y copr enable jackgreiner/lsfg-vk-git
 
 # Terra repo (https://terra.fyralabs.com) for packages missing from the base repos
 # terra-release already ships in the bazzite base image with its repos disabled by
@@ -137,7 +138,6 @@ dnf5 install -y --skip-unavailable --skip-broken \
     discord \
     vesktop \
     brave-browser \
-    firefox \
     filezilla \
     transmission-gtk \
     inkscape \
@@ -215,7 +215,11 @@ dnf5 install -y --skip-unavailable --skip-broken \
     bruno \
     bottles \
     wev \
-    faugus-launcher
+    faugus-launcher \
+    strace \
+    lsfg-vk \
+    lsfg-vk-ui \
+
 
 ### LibreOffice (nix config used the qt6 build; libreoffice-kf6 is Fedora's closest analog)
 dnf5 install -y --skip-unavailable \
@@ -232,6 +236,7 @@ dnf5 -y copr disable hazel-bunny/ricing
 dnf5 -y copr disable grahamwhiteuk/bruno
 dnf5 -y copr disable vertigo-red/bottles
 dnf5 -y copr disable faugus/faugus-launcher
+dnf5 -y copr disable jackgreiner/lsfg-vk-git
 
 ### Fonts
 
